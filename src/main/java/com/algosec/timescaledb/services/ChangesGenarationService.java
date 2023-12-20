@@ -11,9 +11,12 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -74,5 +77,23 @@ public class ChangesGenarationService {
     public List<Rule> getMonthly(String ruleId) {
         return ruleRepository.findMonthlyByRuleId(ruleId);
     }
+
+    public Integer amountChangesOnPolicyFromDate(String policyId, long date) {
+        return ruleRepository.countByTimeAfterAndPolicyId(Instant.ofEpochMilli(date-1).atZone(ZoneId.systemDefault()).toLocalDate(), policyId);
+    
+    }
+
+    public Rule findFromDate(String ruleId, long date) {
+        //find by year
+        return ruleRepository.findFirstByRuleIdAndTimeIsAfterOrderByTime(ruleId, Instant.ofEpochMilli(date-1).atZone(ZoneId.systemDefault()).toLocalDate());
+    }
+
+//    public List<Integer> getYearlyAmount(String ruleId) {
+//        return ruleRepository.findYearlyByRuleId(ruleId);
+//    }
+//
+//    public List<Integer> getMonthlyAmount(String ruleId) {
+//        return ruleRepository.findMonthlyByRuleId(ruleId);
+//    }
 
 }

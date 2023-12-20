@@ -2,6 +2,7 @@ package com.algosec.timescaledb.controllers;
 
 import com.algosec.timescaledb.entities.Rule;
 import com.algosec.timescaledb.services.ChangesGenarationService;
+import com.algosec.timescaledb.services.CompareUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -49,6 +51,23 @@ public class ChangesController {
     public List<Rule> findYearly(@PathVariable("ruleId") String ruleId) {
         return changesGenarationService.getYearly(ruleId);
     }
-    
+
+    @GetMapping("/policy/{policyId}/fromDate/{date}")
+    public Integer amountChangesOnPolicyFromDate(@PathVariable("policyId") String policyId, @PathVariable("date") long date) {
+        
+        return changesGenarationService.amountChangesOnPolicyFromDate(policyId, date);
+    }
+
+    @GetMapping("/rule/{ruleId}/fromDate/{date}")
+    public Rule findFromDate(@PathVariable("ruleId") String ruleId, @PathVariable("date") long date) {
+        return changesGenarationService.findFromDate(ruleId, date);
+    }
+
+    @GetMapping("/rule/{ruleId}/compareLatestWithFromDate/{date}")
+    public Map<String, String> compareLatestWithFromDate(@PathVariable("ruleId") String ruleId, @PathVariable("date") long date) throws IllegalAccessException {
+        return CompareUtils.compareRuleData(changesGenarationService.findFromDate(ruleId, date).getData(), changesGenarationService.getLatest(ruleId).getData());
+    }
+
+
 
 }

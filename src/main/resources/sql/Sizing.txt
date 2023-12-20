@@ -1,0 +1,24 @@
+Size:
+22300 records.
+
+Before compression:
+701415424 bytes
+
+After compression:
+349896704 bytes (~50% reduction)
+
+
+Commands:
+ALTER TABLE rule SET (timescaledb.compress, timescaledb.compress_segmentby = 'ruleid, policyid');
+
+SELECT add_compression_policy('rule', INTERVAL '60d');
+
+
+Retention Policy:
+
+Command:
+SELECT add_retention_policy('rule', INTERVAL '5 years');
+
+Useful Command:
+SELECT * FROM timescaledb_information.jobs;
+
