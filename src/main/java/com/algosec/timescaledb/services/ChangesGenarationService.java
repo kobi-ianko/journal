@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -67,7 +68,16 @@ public class ChangesGenarationService {
 //    }
 
     public Rule getLatest(String ruleId) {
-        return ruleRepository.findLatestByRuleId(ruleId);
+//        return ruleRepository.findLatestByRuleId(ruleId);
+
+        for(int i=0; i<5;i++) {
+            Optional<Rule> ruleOp = ruleRepository.findFirstByRuleIdAndTimeIsAfterAndTimeIsBeforeOrderByTimeDesc(ruleId, LocalDate.now().minusYears(i+1), LocalDate.now().minusYears(i));
+            System.out.println(ruleOp.isPresent());
+            if (ruleOp.isPresent()) {
+                return ruleOp.get();
+            }
+        }
+        return null;
     }
 
     public List<Rule> getYearly(String ruleId) {

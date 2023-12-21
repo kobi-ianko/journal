@@ -22,7 +22,7 @@ public class CompareUtils {
             String newerField = (String)field.get(newer);
 
             if(!Objects.equals(olderField, newerField)) {
-            result.put(field.getName(), "Was: " + olderField+". Now: " + newerField);
+                result.put(field.getName(), "Was: " + olderField+". Now: " + newerField);
             }
         }
         return result;

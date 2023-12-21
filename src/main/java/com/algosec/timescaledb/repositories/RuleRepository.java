@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface RuleRepository extends JpaRepository<Rule, RuleId> {
 
@@ -61,5 +62,7 @@ public interface RuleRepository extends JpaRepository<Rule, RuleId> {
     int countByTimeAfterAndPolicyId(LocalDate date, String policyId);
     
     Rule findFirstByRuleIdAndTimeIsAfterOrderByTime(String ruleId, LocalDate date);
+
+    Optional<Rule> findFirstByRuleIdAndTimeIsAfterAndTimeIsBeforeOrderByTimeDesc(String ruleId, LocalDate startDate, LocalDate endDate);
 
 }
